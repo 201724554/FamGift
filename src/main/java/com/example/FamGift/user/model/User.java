@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
+@Table(name = "TB_USER")
 @Getter
 public class User {
     @Id

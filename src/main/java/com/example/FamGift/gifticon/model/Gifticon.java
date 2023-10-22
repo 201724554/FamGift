@@ -10,6 +10,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "TB_GIFTICON")
 @Getter
 public class Gifticon {
     @Id

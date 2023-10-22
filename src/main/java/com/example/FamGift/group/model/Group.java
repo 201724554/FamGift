@@ -7,9 +7,9 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
+@Table(name = "TB_GROUP")
 @Getter
 public class Group {
     @Id
@@ -17,7 +17,7 @@ public class Group {
     @Column(name = "GROUP_ID")
     private Long id;
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "GROUP_ADMIN_ID")
+    @JoinColumn(name = "GROUP_ADMIN_ID", foreignKey = @ForeignKey(name = "FK_GROUP_TO_USER"))
     private User groupAdmin;
     @Column(name = "GROUP_PASSWORD")
     private String groupPassword;

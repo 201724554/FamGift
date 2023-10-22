@@ -5,6 +5,7 @@ import lombok.Getter;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "TB_MENU")
 @Getter
 public class Menu {
     @Id
@@ -21,6 +22,6 @@ public class Menu {
     @Column(name = "MENU_ORDER")
     private Integer menuOrder;
     @OneToOne
-    @JoinColumn(name = "WINDOW_ID")
+    @JoinColumn(name = "WINDOW_ID", foreignKey = @ForeignKey(name = "FK_MENU_TO_WINDOW"))
     private Window window;
 }

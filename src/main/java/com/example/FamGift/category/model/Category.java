@@ -9,6 +9,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "TB_CATEGORY")
 @Getter
 public class Category {
     @Id

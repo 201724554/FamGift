@@ -10,6 +10,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "TB_USER_GROUP")
 @Getter
 public class UserGroup {
     @Id
