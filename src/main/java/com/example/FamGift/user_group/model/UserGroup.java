@@ -10,7 +10,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "TB_USER_GROUP")
+@Table(name = "TB_USER_GROUP", uniqueConstraints = @UniqueConstraint(name = "UNIQUE_USER_GROUP", columnNames = {"USER_ID", "GROUP_ID"}))
 @Getter
 public class UserGroup {
     @Id

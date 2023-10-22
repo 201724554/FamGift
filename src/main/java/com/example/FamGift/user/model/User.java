@@ -12,7 +12,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "TB_USER")
+@Table(name = "TB_USER", uniqueConstraints = {
+        @UniqueConstraint(name = "UNIQUE_EMAIL", columnNames = {"USER_EMAIL"}),
+})
 @Getter
 public class User {
     @Id

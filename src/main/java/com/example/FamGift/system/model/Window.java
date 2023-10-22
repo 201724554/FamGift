@@ -8,7 +8,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "TB_WINDOW")
+@Table(name = "TB_WINDOW",  uniqueConstraints = @UniqueConstraint(name = "UNIQUE_PATH", columnNames = {"WINDOW_PATH"}))
 @Getter
 public class Window {
     @Id

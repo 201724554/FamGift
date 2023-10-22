@@ -10,7 +10,11 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "TB_GIFTICON")
+@Table(name = "TB_GIFTICON", 
+        uniqueConstraints ={
+            @UniqueConstraint(name = "UNIQUE_IMAGE_PATH", columnNames = {"GIFTICON_IMAGE_PATH"}),
+            @UniqueConstraint(name = "UNIQUE_OWNER_GROUP", columnNames = {"GIFTICON_OWNER_ID", "GIFTICON_GROUP"})
+})
 @Getter
 public class Gifticon {
     @Id

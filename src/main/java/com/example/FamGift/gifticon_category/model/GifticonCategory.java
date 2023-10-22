@@ -10,7 +10,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "TB_GIFTICON_CATEGORY")
+@Table(name = "TB_GIFTICON_CATEGORY", uniqueConstraints = @UniqueConstraint(name = "UNIQUE_GIFTICON_CATEGORY", columnNames = {"GIFTICON_ID", "CATEGORY_ID"}))
 @Getter
 public class GifticonCategory {
     @Id

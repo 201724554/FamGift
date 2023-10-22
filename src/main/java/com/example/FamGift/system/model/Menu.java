@@ -5,7 +5,10 @@ import lombok.Getter;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "TB_MENU")
+@Table(name = "TB_MENU", uniqueConstraints = {
+        @UniqueConstraint(name = "UNIQUE_NAME", columnNames = {"MENU_NAME"}),
+        @UniqueConstraint(name = "UNIQUE_ORDER", columnNames = {"MENU_ORDER"}),
+})
 @Getter
 public class Menu {
     @Id
