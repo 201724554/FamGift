@@ -1,5 +1,6 @@
 package com.example.FamGift.user.model;
 
+import com.example.FamGift.common.model.CommonEntity;
 import com.example.FamGift.gifticon.model.Gifticon;
 import com.example.FamGift.group.model.Group;
 import lombok.Getter;
@@ -16,7 +17,7 @@ import java.util.List;
         @UniqueConstraint(name = "UNIQUE_EMAIL", columnNames = {"USER_EMAIL"}),
 })
 @Getter
-public class User {
+public class User extends CommonEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "USER_ID")
@@ -32,10 +33,4 @@ public class User {
     private Auth authority;
     @Column(name = "USER_BIRTHDAY")
     private LocalDate birthday;
-    @CreationTimestamp
-    @Column(name = "USER_CREATED_DATE")
-    private LocalDateTime insertedDate;
-    @UpdateTimestamp
-    @Column(name = "USER_UPDATED_DATE")
-    private LocalDateTime updatedDate;
 }

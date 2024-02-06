@@ -1,5 +1,6 @@
 package com.example.FamGift.category.model;
 
+import com.example.FamGift.common.model.CommonEntity;
 import com.example.FamGift.user.model.User;
 import lombok.Getter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -11,7 +12,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "TB_CATEGORY", uniqueConstraints = @UniqueConstraint(name = "UNIQUE_NAME_OWNER", columnNames = {"CATEGORY_NAME", "CATEGORY_OWNER_ID"}))
 @Getter
-public class Category {
+public class Category extends CommonEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "CATEGORY_ID")
@@ -21,10 +22,4 @@ public class Category {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CATEGORY_OWNER_ID", foreignKey = @ForeignKey(name = "FK_CATEGORY_TO_USER"))
     private User categoryOwner;
-    @CreationTimestamp
-    @Column(name = "CATEGORY_CREATED_DATE")
-    private LocalDateTime insertedDate;
-    @UpdateTimestamp
-    @Column(name = "CATEGORY_UPDATED_DATE")
-    private LocalDateTime updatedDate;
 }

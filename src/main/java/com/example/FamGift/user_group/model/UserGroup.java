@@ -1,5 +1,6 @@
 package com.example.FamGift.user_group.model;
 
+import com.example.FamGift.common.model.CommonEntity;
 import com.example.FamGift.group.model.Group;
 import com.example.FamGift.user.model.User;
 import lombok.Getter;
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "TB_USER_GROUP", uniqueConstraints = @UniqueConstraint(name = "UNIQUE_USER_GROUP", columnNames = {"USER_ID", "GROUP_ID"}))
 @Getter
-public class UserGroup {
+public class UserGroup extends CommonEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "USER_GROUP_ID")
@@ -23,10 +24,4 @@ public class UserGroup {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "GROUP_ID", foreignKey = @ForeignKey(name = "FK_USER_GROUP_TO_GROUP"))
     private Group group;
-    @CreationTimestamp
-    @Column(name = "USER_GROUP_CREATED_DATE")
-    private LocalDateTime insertedDate;
-    @UpdateTimestamp
-    @Column(name = "USER_GROUP_UPDATED_DATE")
-    private LocalDateTime updatedDate;
 }

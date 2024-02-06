@@ -1,5 +1,6 @@
 package com.example.FamGift.gifticon.model;
 
+import com.example.FamGift.common.model.CommonEntity;
 import com.example.FamGift.group.model.Group;
 import com.example.FamGift.user.model.User;
 import lombok.Getter;
@@ -16,7 +17,7 @@ import java.time.LocalDateTime;
             @UniqueConstraint(name = "UNIQUE_OWNER_GROUP", columnNames = {"GIFTICON_OWNER_ID", "GIFTICON_GROUP"})
 })
 @Getter
-public class Gifticon {
+public class Gifticon extends CommonEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "GIFTICON_ID")
@@ -42,10 +43,4 @@ public class Gifticon {
     private Group group;
     @Column(name = "GIFTICON_EXPIRATION_DATE")
     private LocalDateTime expirationDate;
-    @CreationTimestamp
-    @Column(name = "GIFTICON_CREATED_DATE")
-    private LocalDateTime insertedDate;
-    @UpdateTimestamp
-    @Column(name = "GIFTICON_UPDATE_DATE")
-    private LocalDateTime updatedDate;
 }
