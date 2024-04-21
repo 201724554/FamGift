@@ -19,9 +19,9 @@ import java.util.List;
 @Getter
 public class User extends CommonEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "USER_ID")
-    private Long id;
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "USER_ID", length = 255)
+    private String id;
     @Column(name = "USER_NAME", length = 20)
     private String name;
     @Column(name = "USER_EMAIL", length = 50)
