@@ -16,21 +16,32 @@ import java.util.List;
 @Table(name = "TB_USER", uniqueConstraints = {
         @UniqueConstraint(name = "UNIQUE_EMAIL", columnNames = {"USER_EMAIL"}),
 })
-@Getter
 public class User extends CommonEntity {
     @Id
     //@GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "USER_ID", length = 255)
-    private String id;
+    @Column(name = "USER_ID")
+    @Getter
+    private Long id;
     @Column(name = "USER_NAME", length = 20)
+    @Getter
     private String name;
     @Column(name = "USER_EMAIL", length = 50)
     private String email;
     @Column(name = "USER_PASSWORD")
     private String password;
     @Column(name = "USER_AUTHORITY", length = 10)
+    @Getter
     @Enumerated(EnumType.STRING)
     private Auth authority;
     @Column(name = "USER_BIRTHDAY")
     private LocalDate birthday;
+
+    public User() {}
+
+    public User(Long id, String name, String password, Auth authority) {
+        this.id = id;
+        this.name = name;
+        this.password = password;
+        this.authority = authority;
+    }
 }
