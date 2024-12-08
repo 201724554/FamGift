@@ -1,5 +1,6 @@
 package com.example.FamGift.common.facade;
 
+import com.example.FamGift.common.config.CookieOption;
 import com.example.FamGift.common.dto.KakaoLoginDto;
 import com.example.FamGift.common.mapper.KakaoTokenResponseEntity;
 import com.example.FamGift.common.mapper.KakaoUserInfoResponseEntity;
@@ -18,6 +19,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
 
+import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -45,13 +49,15 @@ public class LoginFacadeImpl implements LoginFacade {
 
     @Override
     @Transactional
-    public ResponseCookie kakaoLogin(KakaoLoginDto kakaoLoginDto) {
+    public Map<String, ResponseCookie> kakaoLogin(KakaoLoginDto kakaoLoginDto) {
         /**
          * 1. 넘어온 code 값으로 kakao api 호출해 token 발행
          * 2. token 이용해 사용자 정보 불러오는 api 호출
          * 3.1 사용자 정보가 user 테이블에 존재하면 쿠키 생성 후 리턴
          * 3.2 사용자 정보가 없으면 사용자 신규 생성 후 쿠기 생성 후 리턴
          **/
+        Map<String, ResponseCookie> mp = new HashMap<>();
+
         String code = kakaoLoginDto.getCode();
 
         HttpHeaders header = new HttpHeaders();
@@ -84,6 +90,9 @@ public class LoginFacadeImpl implements LoginFacade {
 
         String accessToken = jwtTokenService.makeToken(user);
 
-        return cookieService.makeCookie("jwt", accessToken);
+        mp.put("jwt", cookieService.makeCookie("jwt", accessToken, new CookieOption("Strict", true, false, "/", Duration.ofHours(9999))));
+        //mp.put("userId", cookieService.makeCookie("userId", userId, new CookieOption("Strict", false, false, "/", Duration.ofHours(9999))));
+        mp.put("login", cookieService.makeCookie("login", "login", new CookieOption("Strict", false, false, "/", Duration.ofHours(9999))));
+        return mp;
     }
 }

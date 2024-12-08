@@ -1,7 +1,9 @@
 package com.example.FamGift.common.service;
 
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.Claim;
 import com.example.FamGift.common.model.JwtToken;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -47,11 +49,19 @@ public class JwtTokenServiceImpl implements JwtTokenService {
         return claims;
     }
 
+    public Map<String, Claim> getClaims(String jwt) {
+        return JWT.require(Algorithm.HMAC512(key)).build().verify(jwt).getClaims();
+    }
+
     private String stringfy(JwtToken jwtToken) {
-        return JWT.create()
+        Map<String, String> claims = jwtToken.getClaims();
+
+        JWTCreator.Builder jwtBuilder = JWT.create()
                 .withSubject(jwtToken.getSubject())
-                .withExpiresAt(jwtToken.getExpiresAt())
-                .withClaim("claimName", jwtToken.getClaims())
-                .sign(Algorithm.HMAC512(key));
+                .withExpiresAt(jwtToken.getExpiresAt());
+
+        claims.keySet().forEach((key) -> jwtBuilder.withClaim(key, claims.get(key)));
+
+        return jwtBuilder.sign(Algorithm.HMAC512(key));
     }
 }

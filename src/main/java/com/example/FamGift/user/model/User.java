@@ -22,17 +22,22 @@ public class User extends CommonEntity {
     @Column(name = "USER_ID")
     @Getter
     private Long id;
+
     @Column(name = "USER_NAME", length = 20)
     @Getter
     private String name;
+
     @Column(name = "USER_EMAIL", length = 50)
     private String email;
+
     @Column(name = "USER_PASSWORD")
     private String password;
+
     @Column(name = "USER_AUTHORITY", length = 10)
     @Getter
     @Enumerated(EnumType.STRING)
     private Auth authority;
+
     @Column(name = "USER_BIRTHDAY")
     private LocalDate birthday;
 
