@@ -22,6 +22,7 @@ import org.springframework.util.MultiValueMap;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 
@@ -79,16 +80,27 @@ public class LoginFacadeImpl implements LoginFacade {
         ResponseEntity<?> kakaoUserInfoResponse = apiService.sendRequest(kakaoUserInfoUri, HttpMethod.GET, kakaoUserInfoRequest, KakaoUserInfoResponseEntity.class);
 
         KakaoUserInfoResponseEntity kakaoUserInfoResponseEntity = (KakaoUserInfoResponseEntity) kakaoUserInfoResponse.getBody();
+
+        if(!Objects.isNull(kakaoUserInfoResponseEntity)) {
+            log.info("kakao user info : " + kakaoUserInfoResponseEntity.toString());
+        }
+
         Long userId = kakaoUserInfoResponseEntity.getId();
         String userNickname = kakaoUserInfoResponseEntity.getProperties().getNickname();
         Optional<User> user = userService.findUserByUserId(userId);
+        User newUser = null;
 
         if(user.isEmpty()) {
-            User newUser = new User(userId, userNickname, bCryptPasswordEncoder.encode(kakaoDefaultPwd), Auth.NORMAL);
+            log.info("empty user");
+
+            newUser = new User(userId, userNickname, bCryptPasswordEncoder.encode(kakaoDefaultPwd), Auth.ROLE_USER);
             userService.saveUser(newUser);
+        } else {
+            log.info("not empty user");
+            newUser = user.get();
         }
 
-        String accessToken = jwtTokenService.makeToken(user);
+        String accessToken = jwtTokenService.makeToken(newUser);
 
         mp.put("jwt", cookieService.makeCookie("jwt", accessToken, new CookieOption("Strict", true, false, "/", Duration.ofHours(9999))));
         //mp.put("userId", cookieService.makeCookie("userId", userId, new CookieOption("Strict", false, false, "/", Duration.ofHours(9999))));

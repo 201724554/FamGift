@@ -1,8 +1,6 @@
 package com.example.FamGift.security;
 
-import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.example.FamGift.common.service.JwtTokenService;
-import com.example.FamGift.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,7 +15,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.nio.file.AccessDeniedException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,11 +25,12 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 public class BaseFilter extends OncePerRequestFilter {
-    private final UserService userService;
     private final JwtTokenService tokenService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        log.info("initial request : " + request.toString());
+
         Cookie[] cookies = request.getCookies();
         Map<String, String> cookieMap = new HashMap<>();
 
@@ -41,15 +39,19 @@ public class BaseFilter extends OncePerRequestFilter {
         }
 
         if(!cookieMap.containsKey("jwt")) {
+            log.info("no jwt");
+
             filterChain.doFilter(request, response);
             return;
         }
 
         PrincipalDetails principalDetails = null;
         try {
+            log.info("jwt : " + cookieMap.get("jwt"));
+
             principalDetails = new PrincipalDetails(tokenService, cookieMap.get("jwt"));
-        } catch (IllegalArgumentException | JWTVerificationException e) {
-            throw new AccessDeniedException("");
+        } catch (Exception e) {
+            log.error(e.getMessage());
         }
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(principalDetails,

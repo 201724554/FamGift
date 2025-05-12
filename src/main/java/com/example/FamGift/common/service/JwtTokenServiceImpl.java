@@ -5,6 +5,7 @@ import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.Claim;
 import com.example.FamGift.common.model.JwtToken;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -17,6 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
+@Slf4j
 public class JwtTokenServiceImpl implements JwtTokenService {
     @Value("${jwt.subject}")
     private String subject;
@@ -45,7 +47,7 @@ public class JwtTokenServiceImpl implements JwtTokenService {
                 }
             }
         }
-
+        log.info(claims.toString());
         return claims;
     }
 

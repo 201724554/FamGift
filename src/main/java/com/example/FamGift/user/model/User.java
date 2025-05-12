@@ -49,4 +49,11 @@ public class User extends CommonEntity {
         this.password = password;
         this.authority = authority;
     }
+
+    public User(Long id, String name, String password, String authority) {
+        this.id = id;
+        this.name = name;
+        this.password = password;
+        this.authority = Auth.valueOf(authority);
+    }
 }

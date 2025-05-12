@@ -1,33 +1,32 @@
 package com.example.FamGift.security;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.Claim;
 import com.example.FamGift.common.service.JwtTokenService;
-import com.example.FamGift.common.service.JwtTokenServiceImpl;
 import com.example.FamGift.user.model.Auth;
 import com.example.FamGift.user.model.User;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collector;
 
+@Slf4j
 public class PrincipalDetails implements UserDetails {
     private final User user;
     public PrincipalDetails(JwtTokenService tokenService, String jwt) {
-        Map<String, Claim> claims  = tokenService.getClaims(jwt);
+        Map<String, Claim> claims = tokenService.getClaims(jwt);
+
+        log.info("claims : " + claims.keySet());
+        log.info("claim values : " + claims);
+
         this.user = new User(
-                Long.getLong(claims.get("id").toString()),
-                claims.get("name").toString(),
+                Long.getLong(claims.get("id").asString()),
+                claims.get("name").asString(),
                 null,
-                Auth.valueOf(claims.get("authority").toString())
-                            );
+                claims.get("authority").asString()
+        );
     }
 
     @Override
@@ -67,3 +66,4 @@ public class PrincipalDetails implements UserDetails {
         return false;
     }
 }
+
