@@ -44,4 +44,9 @@ public class CommonService {
         Optional<User> optionalUser = userRepository.findUserById(userId);
         return optionalUser.orElseThrow(() -> new RuntimeException("사용자가 존재하지 않습니다"));
     }
+
+    public User findUserByJwtToken() {
+        String jwt = getCookieValueFromRequest("jwt");
+        return findUserByJwtToken(jwt);
+    }
 }
