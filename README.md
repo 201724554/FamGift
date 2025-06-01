@@ -26,3 +26,17 @@
   - React에서 버튼 클릭 이번트 함수 설정을 아래와 같이 구현했을 때 렌더링 시점에서 함수가 바로 실행되는 문제 발생
   - `<button onClick={onButtonClick(category)} className="modal-button">{buttonText}</button>`
   - 해결 방법: onClick 핸들러가 onButtonClick 함수를 직접 호출하기 때문에 렌더링 시점에서 함수 실행, `()=>onButtonClick` 형식으로 함수 자체를 전달하는 것오르 해결 가능
+- 25.05.31
+  - Controller에서 @RequestPart로 MultipartFile이 수신이 안됨 
+  - `@PostMapping("/gifticon")
+    public ResponseEntity<?> addGifticon(
+    @RequestPart(value = "image", required = false) MultipartFile image,
+    @RequestPart(value = "couponInfo") GifticonAddDto dto
+    ) {
+    log.info(image.getName()) --> NullPtrException
+    return ResponseEntity.ok(null);
+    }`
+  - 해결 방법: 프론트에서 파일을 FileReader.readAsDataURL() 방식으로 읽고 있었음
+  - 이 방법은 프론트에서 파일(툭히 이미지)를 미리보기할 때 주로 사용하는 방법인데, 파일을 base64로 인코딩함
+  - 근데 Spring Boot에서 Multipart를 수신할 때 base64로 인코딩된 건 인식하지 못함
+  - 따라서 프론트에서 FileReader로 변환하지 않은 파일을 그대로 전송함 -> `const file = event.target.files[0]; sendFile(file)` 형식
