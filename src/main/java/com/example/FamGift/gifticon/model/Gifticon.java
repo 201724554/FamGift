@@ -1,14 +1,13 @@
 package com.example.FamGift.gifticon.model;
 
 import com.example.FamGift.common.model.CommonEntity;
+import com.example.FamGift.gifticon.dto.GifticonAddDto;
 import com.example.FamGift.group.model.Group;
 import com.example.FamGift.user.model.User;
 import lombok.Getter;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "TB_GIFTICON", 
@@ -35,6 +34,9 @@ public class Gifticon extends CommonEntity {
     @Column(name = "GIFTICON_TYPE", length = 20)
     @Enumerated(EnumType.STRING)
     private GifticonType gifticonType;
+    @Column(name = "GIFTICON_USE_YN", length = 1)
+    @Enumerated(EnumType.STRING)
+    private GifticonUseYn gifticonUseYn;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "GIFTICON_OWNER_ID", foreignKey = @ForeignKey(name = "FK_GIFTICON_TO_USER"))
     private User gifticonOwner;
@@ -42,5 +44,25 @@ public class Gifticon extends CommonEntity {
     @JoinColumn(name = "GIFTICON_GROUP", foreignKey = @ForeignKey(name = "FK_GIFTICON_TO_GROUP"))
     private Group group;
     @Column(name = "GIFTICON_EXPIRATION_DATE")
-    private LocalDateTime expirationDate;
+    private LocalDate expirationDate;
+
+    public Gifticon() {}
+    public Gifticon(GifticonAddDto dto, User user, String imagePath) {
+        this.barcode = dto.getBarcode();
+        this.brand = dto.getBrand();
+        this.name = dto.getProductName();
+        this.gifticonOwner = user;
+        this.expirationDate = dto.getExpirationDate();
+        this.imagePath = imagePath;
+        this.gifticonUseYn = GifticonUseYn.Y;
+    }
+    public Gifticon(GifticonAddDto dto, User user, String imagePath, GifticonUseYn gifticonUseYn) {
+        this.barcode = dto.getBarcode();
+        this.brand = dto.getBrand();
+        this.name = dto.getProductName();
+        this.gifticonOwner = user;
+        this.expirationDate = dto.getExpirationDate();
+        this.imagePath = imagePath;
+        this.gifticonUseYn = gifticonUseYn;
+    }
 }

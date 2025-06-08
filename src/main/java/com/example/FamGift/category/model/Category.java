@@ -15,6 +15,9 @@ import java.time.LocalDateTime;
 @Getter
 public class Category extends CommonEntity {
     public Category() {}
+    public Category(Long id) {
+        this.id = id;
+    }
     public Category(CategoryDto dto, User categoryOwner) {
         this.name = dto.getName();
         this.categoryOwner = categoryOwner;

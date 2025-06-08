@@ -24,4 +24,10 @@ public class GifticonCategory extends CommonEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CATEGORY_ID", foreignKey = @ForeignKey(name = "FK_GIFTICON_CATEGORY_TO_CATEGORY"))
     private Category category;
+
+    public GifticonCategory() {}
+    public GifticonCategory(Gifticon gifticon, Category category) {
+        this.gifticon = gifticon;
+        this.category = category;
+    }
 }

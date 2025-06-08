@@ -23,7 +23,6 @@ public class CategoryService {
         categoryRepo.save(category);
     }
 
-    @Transactional
     public List<Category> getCategoriesByCategoryOwner(User categoryOwner) {
         return categoryRepo.findCategoryByCategoryOwnerId(categoryOwner.getId());
     }

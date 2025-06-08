@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,6 +20,8 @@ import java.util.stream.Collectors;
 public class CategoryFacade {
     private final CategoryService categoryService;
     private final CommonService commonService;
+
+    @Transactional
     public void addCategory(CategoryDto dto) {
         User categoryOwner = commonService.findUserByJwtToken();
         categoryService.addCategory(dto, categoryOwner);
