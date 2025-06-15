@@ -65,4 +65,8 @@ public class Gifticon extends CommonEntity {
         this.imagePath = imagePath;
         this.gifticonUseYn = gifticonUseYn;
     }
+
+    public void delete() {
+        this.gifticonUseYn = GifticonUseYn.N;
+    }
 }

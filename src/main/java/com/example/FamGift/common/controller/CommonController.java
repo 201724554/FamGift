@@ -20,7 +20,6 @@ public class CommonController implements BaseController {
     public ResponseEntity<byte[]> getImage(@PathVariable("imageUrl") String imageUrl) {
         byte[] file = fileService.getImageFile(imageUrl);
         HttpHeaders headers = new HttpHeaders();
-        //headers.add("Content-Type", "image/*"); // 필요하면 다른 타입 사용 가능
         return new ResponseEntity<>(file, headers, HttpStatus.OK);
     }
 }

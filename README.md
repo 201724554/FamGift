@@ -40,3 +40,10 @@
   - 이 방법은 프론트에서 파일(툭히 이미지)를 미리보기할 때 주로 사용하는 방법인데, 파일을 base64로 인코딩함
   - 근데 Spring Boot에서 Multipart를 수신할 때 base64로 인코딩된 건 인식하지 못함
   - 따라서 프론트에서 FileReader로 변환하지 않은 파일을 그대로 전송함 -> `const file = event.target.files[0]; sendFile(file)` 형식
+- 25.06.11
+  - RequestBody 수신 시 Long/Integer 타입으로 수신 시 `org.springframework.http.converter.HttpMessageNotReadableException: JSON parse error: Cannot deserialize value of type java.lang.Long from Object value ...` 에러 발생
+  - `public ResponseEntity<?> deleteGifticon(@RequestBody Long id)`
+  - 해결 방법: String 타입으로 수신 or 객체로 수신 
+  - `public ResponseEntity<?> deleteGifticon(@RequestBody Test id) `
+  - 요청이 { id: coupon.id } 형태로 전달되면서 객체(JSON Object)로 인식되기 때문에, Long이나 Integer 같은 단일 값으로 변환할 수 없어 오류가 발생
+  - 추가로, `@RequestBody String id` 형식으로 받을 경우, json 문자열을 그대로 받기 때문에(ex. `"{"id":18}"`) 사실상 dto나 Map으로 수신해야함 

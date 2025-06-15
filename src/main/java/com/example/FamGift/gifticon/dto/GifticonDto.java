@@ -1,5 +1,8 @@
-package com.example.FamGift.gifticon.model;
+package com.example.FamGift.gifticon.dto;
 
+import com.example.FamGift.gifticon.model.Gifticon;
+import com.example.FamGift.gifticon.model.GifticonType;
+import com.example.FamGift.gifticon.model.GifticonUseYn;
 import lombok.Getter;
 
 import java.time.LocalDate;
