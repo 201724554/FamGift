@@ -1,8 +1,8 @@
 package com.example.FamGift.gifticon.dto;
 
+import com.example.FamGift.common.model.CommonYn;
 import com.example.FamGift.gifticon.model.Gifticon;
 import com.example.FamGift.gifticon.model.GifticonType;
-import com.example.FamGift.gifticon.model.GifticonUseYn;
 import lombok.Getter;
 
 import java.time.LocalDate;
@@ -16,7 +16,8 @@ public class GifticonDto {
     private String barcode;
     private Integer price;
     private GifticonType gifticonType;
-    private GifticonUseYn gifticonUseYn;
+    private CommonYn gifticonIsUsed;
+    private CommonYn gifticonUseYn;
     private LocalDate expirationDate;
 
     public GifticonDto() {}
@@ -28,6 +29,7 @@ public class GifticonDto {
         this.brand = gifticon.getBrand();
         this.price = gifticon.getPrice();
         this.gifticonType = gifticon.getGifticonType();
+        this.gifticonIsUsed = gifticon.getGifticonIsUsed();
         this.gifticonUseYn = gifticon.getGifticonUseYn();
         this.expirationDate = gifticon.getExpirationDate();
     }

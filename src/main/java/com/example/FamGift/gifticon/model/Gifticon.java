@@ -1,6 +1,7 @@
 package com.example.FamGift.gifticon.model;
 
 import com.example.FamGift.common.model.CommonEntity;
+import com.example.FamGift.common.model.CommonYn;
 import com.example.FamGift.gifticon.dto.GifticonAddDto;
 import com.example.FamGift.group.model.Group;
 import com.example.FamGift.user.model.User;
@@ -8,6 +9,7 @@ import lombok.Getter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "TB_GIFTICON", 
@@ -34,9 +36,14 @@ public class Gifticon extends CommonEntity {
     @Column(name = "GIFTICON_TYPE", length = 20)
     @Enumerated(EnumType.STRING)
     private GifticonType gifticonType;
+    @Column(name = "GIFTICON_IS_USED", length = 1)
+    @Enumerated(EnumType.STRING)
+    private CommonYn gifticonIsUsed;
+    @Column(name = "GIFTICON_USE_DATE")
+    private LocalDateTime gifticonUsedDate;
     @Column(name = "GIFTICON_USE_YN", length = 1)
     @Enumerated(EnumType.STRING)
-    private GifticonUseYn gifticonUseYn;
+    private CommonYn gifticonUseYn;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "GIFTICON_OWNER_ID", foreignKey = @ForeignKey(name = "FK_GIFTICON_TO_USER"))
     private User gifticonOwner;
@@ -54,19 +61,30 @@ public class Gifticon extends CommonEntity {
         this.gifticonOwner = user;
         this.expirationDate = dto.getExpirationDate();
         this.imagePath = imagePath;
-        this.gifticonUseYn = GifticonUseYn.Y;
+        this.gifticonIsUsed = CommonYn.N;
+        this.gifticonUseYn = CommonYn.Y;
     }
-    public Gifticon(GifticonAddDto dto, User user, String imagePath, GifticonUseYn gifticonUseYn) {
+    public Gifticon(GifticonAddDto dto, User user, String imagePath, CommonYn gifticonIsUsed, CommonYn gifticonUseYn) {
         this.barcode = dto.getBarcode();
         this.brand = dto.getBrand();
         this.name = dto.getProductName();
         this.gifticonOwner = user;
         this.expirationDate = dto.getExpirationDate();
         this.imagePath = imagePath;
+        this.gifticonIsUsed = gifticonIsUsed;
         this.gifticonUseYn = gifticonUseYn;
     }
 
     public void delete() {
-        this.gifticonUseYn = GifticonUseYn.N;
+        this.gifticonUseYn = CommonYn.N;
+    }
+
+    public void use() {
+        this.gifticonIsUsed = CommonYn.Y;
+        this.gifticonUsedDate = LocalDateTime.now();
+    }
+
+    public void reuse() {
+        this.gifticonIsUsed = CommonYn.N;
     }
 }

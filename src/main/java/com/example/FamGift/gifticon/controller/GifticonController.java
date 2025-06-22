@@ -39,9 +39,21 @@ public class GifticonController implements BaseController {
         return ResponseEntity.ok(null);
     }
 
-    @PatchMapping("/gifticon")
+    @PatchMapping("/gifticon/delete")
     public ResponseEntity<?> deleteGifticon(@RequestBody GifticonDto dto) {
         gifticonFacade.deleteGifticon(dto.getId());
+        return ResponseEntity.ok(null);
+    }
+
+    @PatchMapping("/gifticon/use")
+    public ResponseEntity<?> useGifticon(@RequestBody GifticonDto dto) {
+        gifticonFacade.useGifticon(dto.getId());
+        return ResponseEntity.ok(null);
+    }
+
+    @PatchMapping("/gifticon/reuse")
+    public ResponseEntity<?> reuseGifticon(@RequestBody GifticonDto dto) {
+        gifticonFacade.reuseGifticon(dto.getId());
         return ResponseEntity.ok(null);
     }
 }
