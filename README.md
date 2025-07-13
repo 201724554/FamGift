@@ -47,3 +47,9 @@
   - `public ResponseEntity<?> deleteGifticon(@RequestBody Test id) `
   - 요청이 { id: coupon.id } 형태로 전달되면서 객체(JSON Object)로 인식되기 때문에, Long이나 Integer 같은 단일 값으로 변환할 수 없어 오류가 발생
   - 추가로, `@RequestBody String id` 형식으로 받을 경우, json 문자열을 그대로 받기 때문에(ex. `"{"id":18}"`) 사실상 dto나 Map으로 수신해야함 
+- 25.07.13
+  - 트랜잭션 안에서 delete -> insert 순서로 코드가 실행되도록 설계했지만, 실제 쿼리 실행 순서는 insert -> delete 순으로 실행됨
+  - 해결 방법: delete 후 EntityManager.flush() 실행
+  - 영속성 컨텍스트에 반영된 내용은 flush를 통해 실제 DB에 반영됨
+  - 기본적으로 flush는 트랜잭션을 커밋하기 직전 or JPQL 실행(DB에 직접 쿼리 실행) 전에 실행되는데, insert -> update -> delete 순으로 실행됨
+  - 때문에 소스 상에서는 delete -> insert 순이더라도 insert -> delete 순으로 내용이 DB에 반영됨

@@ -2,6 +2,7 @@ package com.example.FamGift.category.model;
 
 import com.example.FamGift.category.dto.CategoryDto;
 import com.example.FamGift.common.model.CommonEntity;
+import com.example.FamGift.gifticon_category.model.GifticonCategory;
 import com.example.FamGift.user.model.User;
 import lombok.Getter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -9,6 +10,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "TB_CATEGORY", uniqueConstraints = @UniqueConstraint(name = "UNIQUE_NAME_OWNER", columnNames = {"CATEGORY_NAME", "CATEGORY_OWNER_ID"}))
@@ -31,4 +33,6 @@ public class Category extends CommonEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CATEGORY_OWNER_ID", foreignKey = @ForeignKey(name = "FK_CATEGORY_TO_USER"))
     private User categoryOwner;
+    @OneToMany(mappedBy = "category")
+    private List<GifticonCategory> gifticonCategories;
 }

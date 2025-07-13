@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @Controller
@@ -25,9 +26,15 @@ public class GifticonController implements BaseController {
     }
 
     @GetMapping("/gifticon")
-    public ResponseEntity<List<GifticonDto>> getGifticon() {
-        List<GifticonDto> gifticonDtos = gifticonFacade.getGifticon();
+    public ResponseEntity<List<GifticonDto>> getGifticonByCategory(@RequestParam(value = "categories", required = false) Long categoryId) {
+        List<GifticonDto> gifticonDtos = gifticonFacade.getGifticonByCategory(categoryId);
         return new ResponseEntity<>(gifticonDtos, HttpStatus.OK);
+    }
+
+    @GetMapping("/gifticon/{id}")
+    public ResponseEntity<GifticonDto> getGifticonById(@PathVariable(value = "id", required = false) Long id) {
+        GifticonDto gifticonDto = gifticonFacade.getGifticonById(id);
+        return new ResponseEntity<>(gifticonDto, HttpStatus.OK);
     }
 
     @PostMapping("/gifticon")
@@ -36,6 +43,12 @@ public class GifticonController implements BaseController {
             @RequestPart(value = "couponInfo") GifticonAddDto dto
             ) {
         gifticonFacade.addGifticon(image, dto);
+        return ResponseEntity.ok(null);
+    }
+
+    @PatchMapping("/gifticon/update")
+    public ResponseEntity<?> updateGifticon(@RequestBody GifticonAddDto dto) {
+        gifticonFacade.updateGifticon(dto);
         return ResponseEntity.ok(null);
     }
 

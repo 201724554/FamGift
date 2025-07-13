@@ -12,14 +12,18 @@ import com.example.FamGift.gifticon_category.model.GifticonCategory;
 import com.example.FamGift.gifticon_category.service.GifticonCategoryService;
 import com.example.FamGift.user.model.User;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class GifticonFacade {
@@ -27,11 +31,25 @@ public class GifticonFacade {
     private final GifticonService gifticonService;
     private final GifticonCategoryService gifticonCategoryService;
     private final FileService fileService;
+    private final EntityManager entityManager;
 
-    public List<GifticonDto> getGifticon() {
+    public List<GifticonDto> getGifticonByCategory(Long categoryId) {
         User user = commonService.findUserByJwtToken();
-        List<Gifticon> gifticons = gifticonService.getGifticon(user);
+        List<Gifticon> gifticons;
+        if(Objects.isNull(categoryId)) {
+            gifticons = gifticonService.getGifticon(user);
+        } else {
+            gifticons = gifticonService.getGifticonByCategories(user, categoryId);
+        }
         return gifticons.stream().map(GifticonDto::new).collect(Collectors.toList());
+    }
+
+    public GifticonDto getGifticonById(Long id) {
+        User user = commonService.findUserByJwtToken();
+        Gifticon gifticon = gifticonService.getGifticon(id).orElseThrow(NoSuchElementException::new);
+        GifticonDto gifticonDto = new GifticonDto(gifticon);
+        gifticonDto.addCategories(gifticon);
+        return gifticonDto;
     }
 
     @Transactional
@@ -49,15 +67,26 @@ public class GifticonFacade {
         gifticonCategoryService.addGifticonCategories(gifticonCategories);
 
         //upload image file to the server
-        if(!image.isEmpty()) {
+        if(image != null) {
             fileService.uploadFile(image, imagePath);
         }
     }
 
+    @Transactional
+    public void updateGifticon(GifticonAddDto dto) {
+        Gifticon gifticon = gifticonService.getGifticon(dto.getId()).orElseThrow(NoSuchElementException::new);
+        List<GifticonCategory> gifticonCategories = dto.getCategories().stream()
+                .map((category) -> new GifticonCategory(gifticon, new Category(category)))
+                .collect(Collectors.toList());
+        gifticonCategoryService.deleteGifticonCategoryByGifticon(gifticon);
+        entityManager.flush();
+        gifticonCategoryService.addGifticonCategories(gifticonCategories);
+    }
+
+    @Transactional
     public void deleteGifticon(Long id) {
         Gifticon gifticon = gifticonService.getGifticon(id).orElseThrow(NoSuchElementException::new);
         gifticon.delete();
-        gifticonService.saveGifticon(gifticon);
     }
 
     public void useGifticon(Long id) {

@@ -3,6 +3,7 @@ package com.example.FamGift.gifticon.model;
 import com.example.FamGift.common.model.CommonEntity;
 import com.example.FamGift.common.model.CommonYn;
 import com.example.FamGift.gifticon.dto.GifticonAddDto;
+import com.example.FamGift.gifticon_category.model.GifticonCategory;
 import com.example.FamGift.group.model.Group;
 import com.example.FamGift.user.model.User;
 import lombok.Getter;
@@ -10,11 +11,12 @@ import lombok.Getter;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.List;
 
 @Entity
 @Table(name = "TB_GIFTICON", 
         uniqueConstraints ={
-            @UniqueConstraint(name = "UNIQUE_IMAGE_PATH", columnNames = {"GIFTICON_IMAGE_PATH"}),
             @UniqueConstraint(name = "UNIQUE_OWNER_GROUP", columnNames = {"GIFTICON_OWNER_ID", "GIFTICON_GROUP"})
 })
 @Getter
@@ -47,14 +49,22 @@ public class Gifticon extends CommonEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "GIFTICON_OWNER_ID", foreignKey = @ForeignKey(name = "FK_GIFTICON_TO_USER"))
     private User gifticonOwner;
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "GIFTICON_GROUP", foreignKey = @ForeignKey(name = "FK_GIFTICON_TO_GROUP"))
     private Group group;
     @Column(name = "GIFTICON_EXPIRATION_DATE")
     private LocalDate expirationDate;
+    @OneToMany(mappedBy = "gifticon")
+    private List<GifticonCategory> gifticonCategories;
 
     public Gifticon() {}
+    public Gifticon(Long id) {
+        this.id = id;
+    }
     public Gifticon(GifticonAddDto dto, User user, String imagePath) {
+        if(dto.getId() != null) {
+            this.id = dto.getId();
+        }
         this.barcode = dto.getBarcode();
         this.brand = dto.getBrand();
         this.name = dto.getProductName();
@@ -65,6 +75,9 @@ public class Gifticon extends CommonEntity {
         this.gifticonUseYn = CommonYn.Y;
     }
     public Gifticon(GifticonAddDto dto, User user, String imagePath, CommonYn gifticonIsUsed, CommonYn gifticonUseYn) {
+        if(dto.getId() != null) {
+            this.id = dto.getId();
+        }
         this.barcode = dto.getBarcode();
         this.brand = dto.getBrand();
         this.name = dto.getProductName();
@@ -81,10 +94,19 @@ public class Gifticon extends CommonEntity {
 
     public void use() {
         this.gifticonIsUsed = CommonYn.Y;
-        this.gifticonUsedDate = LocalDateTime.now();
+        this.gifticonUsedDate = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
     }
 
     public void reuse() {
         this.gifticonIsUsed = CommonYn.N;
+    }
+
+    public void update(GifticonAddDto dto, List<GifticonCategory> gifticonCategories) {
+        this.barcode = dto.getBarcode();
+        this.brand = dto.getBrand();
+        this.name = dto.getProductName();
+        this.expirationDate = dto.getExpirationDate();
+        this.gifticonCategories.clear();
+        this.gifticonCategories = gifticonCategories;
     }
 }

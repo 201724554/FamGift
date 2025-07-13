@@ -8,7 +8,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.UUID;
 
@@ -16,6 +15,8 @@ import java.util.UUID;
 @Slf4j
 @RequiredArgsConstructor
 public class FileService {
+    @Value("${file.empty}")
+    private String defaultEmptyPath;
     @Value("${file.url}")
     private String fileDefaultPath;
 
@@ -35,6 +36,10 @@ public class FileService {
     }
 
     public String getFilePath(MultipartFile image) {
+        if(image == null) {
+            //빈 이미지 경로로 대체
+            return defaultEmptyPath;
+        }
         String uuid = UUID.randomUUID().toString();
         return uuid + "_" + image.getOriginalFilename();
     }

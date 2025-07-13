@@ -21,6 +21,14 @@ public class GifticonService {
         return gifticonRepo.findByGifticonOwnerAndGifticonUseYn(owner, CommonYn.Y);
     }
 
+    public List<Gifticon> getGifticonByCategories(User owner, Long categoryId) {
+        return gifticonRepo.findByOwnerIdAndCategoryIds(owner, categoryId, CommonYn.Y);
+    }
+
+    public List<Gifticon> getGifticon(User owner, List<Long> categories) {
+        return gifticonRepo.findByGifticonOwnerAndGifticonUseYn(owner, CommonYn.Y);
+    }
+
     public Optional<Gifticon> getGifticon(Long id) {
         return gifticonRepo.findById(id);
     }
