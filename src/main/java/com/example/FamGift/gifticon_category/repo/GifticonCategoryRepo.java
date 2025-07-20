@@ -17,4 +17,6 @@ public interface GifticonCategoryRepo extends JpaRepository<GifticonCategory, Lo
     List<GifticonCategory> findByGifticonAndCategory(Gifticon gifticon, Category category);
     void deleteByGifticon(Gifticon gifticon);
     void deleteByGifticonId(Long gifticon);
+    void deleteByCategoryId(Long categoryId);
+    void deleteByCategoryId(Category category);
 }

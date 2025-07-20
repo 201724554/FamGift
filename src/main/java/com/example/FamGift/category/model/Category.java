@@ -35,4 +35,8 @@ public class Category extends CommonEntity {
     private User categoryOwner;
     @OneToMany(mappedBy = "category")
     private List<GifticonCategory> gifticonCategories;
+
+    public void updateName(String name) {
+        this.name = name;
+    }
 }

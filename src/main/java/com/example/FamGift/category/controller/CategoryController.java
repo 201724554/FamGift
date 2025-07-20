@@ -8,10 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -32,8 +29,15 @@ public class CategoryController implements BaseController {
         return ResponseEntity.ok(categories);
     }
 
-    @DeleteMapping("")
-    private ResponseEntity<?> deleteCategory() {
-        return null;
+    @PutMapping("/category")
+    private ResponseEntity<String> updateCategories(@RequestBody CategoryDto dto) {
+        categoryFacade.updateCategoryName(dto);
+        return ResponseEntity.ok(null);
+    }
+
+    @DeleteMapping("/category")
+    private ResponseEntity<String> deleteCategory(@RequestBody CategoryDto dto) {
+        categoryFacade.deleteCategory(dto);
+        return ResponseEntity.ok(null);
     }
 }

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Component
@@ -31,5 +32,14 @@ public class CategoryFacade {
         User categoryOwner = commonService.findUserByJwtToken();
         List<Category> categories = categoryService.getCategoriesByCategoryOwner(categoryOwner);
         return categories.stream().map(CategoryDto::new).collect(Collectors.toList());
+    }
+
+    public void updateCategoryName(CategoryDto dto) {
+        Category category = categoryService.getCategoriesByCategoryId(dto.getId()).orElseThrow(NoSuchElementException::new);
+        categoryService.updateCategory(category, dto);
+    }
+
+    public void deleteCategory(CategoryDto dto) {
+        categoryService.deleteCategory(dto);
     }
 }
