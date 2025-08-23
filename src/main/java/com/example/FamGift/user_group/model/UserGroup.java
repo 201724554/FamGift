@@ -24,4 +24,10 @@ public class UserGroup extends CommonEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "GROUP_ID", foreignKey = @ForeignKey(name = "FK_USER_GROUP_TO_GROUP"))
     private Group group;
+
+    public UserGroup() {}
+    public UserGroup(User user, Group group) {
+        this.user = user;
+        this.group = group;
+    }
 }

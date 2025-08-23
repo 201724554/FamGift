@@ -1,16 +1,10 @@
 package com.example.FamGift.user.model;
 
 import com.example.FamGift.common.model.CommonEntity;
-import com.example.FamGift.gifticon.model.Gifticon;
-import com.example.FamGift.group.model.Group;
 import lombok.Getter;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name = "TB_USER", uniqueConstraints = {
@@ -18,7 +12,7 @@ import java.util.List;
 })
 public class User extends CommonEntity {
     @Id
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@GeneratedValue(strategy = GenerationType.IDENTITY) 카카오 로그인 api에서 리턴한 id를 사용해서 auto increment 사용 X
     @Column(name = "USER_ID")
     @Getter
     private Long id;

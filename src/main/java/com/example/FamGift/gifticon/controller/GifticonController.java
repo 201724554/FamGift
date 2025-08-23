@@ -2,8 +2,10 @@ package com.example.FamGift.gifticon.controller;
 
 import com.example.FamGift.common.controller.BaseController;
 import com.example.FamGift.gifticon.dto.GifticonAddDto;
+import com.example.FamGift.gifticon.dto.GifticonGroupDto;
 import com.example.FamGift.gifticon.facade.GifticonFacade;
 import com.example.FamGift.gifticon.dto.GifticonDto;
+import com.example.FamGift.gifticon.model.Gifticon;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -37,6 +39,12 @@ public class GifticonController implements BaseController {
         return new ResponseEntity<>(gifticonDto, HttpStatus.OK);
     }
 
+    @GetMapping("/group/gifticon")
+    public ResponseEntity<List<GifticonGroupDto>> getGifticonByGroupRelatedToUser(@RequestParam(value = "groupIds", required = false) Long groupId) {
+        List<GifticonGroupDto> output = gifticonFacade.getGifticonByGroupRelatedToUser(groupId);
+        return new ResponseEntity<>(output, HttpStatus.OK);
+    }
+
     @PostMapping("/gifticon")
     public ResponseEntity<?> addGifticon(
             @RequestPart(value = "image", required = false) MultipartFile image,
@@ -67,6 +75,12 @@ public class GifticonController implements BaseController {
     @PatchMapping("/gifticon/reuse")
     public ResponseEntity<?> reuseGifticon(@RequestBody GifticonDto dto) {
         gifticonFacade.reuseGifticon(dto.getId());
+        return ResponseEntity.ok(null);
+    }
+
+    @PatchMapping("/gifticon/group")
+    public ResponseEntity<?> shareGifticon(@RequestBody GifticonDto dto) {
+        gifticonFacade.shareGifticon(dto);
         return ResponseEntity.ok(null);
     }
 }

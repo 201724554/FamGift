@@ -17,7 +17,7 @@ import java.util.List;
 @Entity
 @Table(name = "TB_GIFTICON", 
         uniqueConstraints ={
-            @UniqueConstraint(name = "UNIQUE_OWNER_GROUP", columnNames = {"GIFTICON_OWNER_ID", "GIFTICON_GROUP"})
+            @UniqueConstraint(name = "UNIQUE_OWNER", columnNames = {"GIFTICON_OWNER_ID"}), @UniqueConstraint(name = "UNIQUE_OWNER", columnNames = {"GROUP_ID"})
 })
 @Getter
 public class Gifticon extends CommonEntity {
@@ -49,8 +49,8 @@ public class Gifticon extends CommonEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "GIFTICON_OWNER_ID", foreignKey = @ForeignKey(name = "FK_GIFTICON_TO_USER"))
     private User gifticonOwner;
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "GIFTICON_GROUP", foreignKey = @ForeignKey(name = "FK_GIFTICON_TO_GROUP"))
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "GROUP_ID", foreignKey = @ForeignKey(name = "FK_GIFTICON_TO_GROUP"))
     private Group group;
     @Column(name = "GIFTICON_EXPIRATION_DATE")
     private LocalDate expirationDate;
@@ -99,6 +99,12 @@ public class Gifticon extends CommonEntity {
 
     public void reuse() {
         this.gifticonIsUsed = CommonYn.N;
+    }
+    public void share(Group group) {
+        this.group = group;
+    }
+    public void stopSharing() {
+        this.group = null;
     }
 
     public void update(GifticonAddDto dto, List<GifticonCategory> gifticonCategories) {

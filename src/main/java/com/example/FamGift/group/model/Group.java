@@ -1,6 +1,7 @@
 package com.example.FamGift.group.model;
 
 import com.example.FamGift.common.model.CommonEntity;
+import com.example.FamGift.group.dto.GroupAddDto;
 import com.example.FamGift.user.model.User;
 import lombok.Getter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -24,4 +25,26 @@ public class Group extends CommonEntity {
     private String groupPassword;
     @Column(name = "GROUP_NAME", length = 20)
     private String groupName;
+
+    public Group(User groupAdmin, String groupPassword, String groupName) {
+        this.groupAdmin = groupAdmin;
+        this.groupPassword = groupPassword;
+        this.groupName = groupName;
+    }
+
+    public void updateGroupName(String groupName) {
+        this.groupName = groupName;
+    }
+
+    public void updateGroupPassword(String groupPassword) {
+        this.groupPassword = groupPassword;
+    }
+
+    public Group() {}
+
+    public Group(GroupAddDto dto, User groupAdmin, String groupPassword) {
+        this.groupName = dto.getGroupName();
+        this.groupPassword = groupPassword;
+        this.groupAdmin = groupAdmin;
+    }
 }

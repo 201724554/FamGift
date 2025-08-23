@@ -25,6 +25,7 @@ public class GifticonDto {
     private CommonYn gifticonUseYn;
     private LocalDate expirationDate;
     private List<Long> categoryIds;
+    private Long groupId;
 
     public GifticonDto() {}
     public GifticonDto(Gifticon gifticon) {
@@ -39,8 +40,28 @@ public class GifticonDto {
         this.gifticonUseYn = gifticon.getGifticonUseYn();
         this.expirationDate = gifticon.getExpirationDate();
         this.gifticonUsedDate = gifticon.getGifticonUsedDate();
+        this.groupId = gifticon.getGroup() == null ? null : gifticon.getGroup().getId();
     }
     public void addCategories(Gifticon gifticon) {
         this.categoryIds = gifticon.getGifticonCategories().stream().map(elem -> elem.getCategory().getId()).collect(Collectors.toList());
+    }
+
+    @Override
+    public String toString() {
+        return "GifticonDto{" +
+                "id=" + id +
+                ", imagePath='" + imagePath + '\'' +
+                ", brand='" + brand + '\'' +
+                ", name='" + name + '\'' +
+                ", barcode='" + barcode + '\'' +
+                ", price=" + price +
+                ", gifticonType=" + gifticonType +
+                ", gifticonUsedDate=" + gifticonUsedDate +
+                ", gifticonIsUsed=" + gifticonIsUsed +
+                ", gifticonUseYn=" + gifticonUseYn +
+                ", expirationDate=" + expirationDate +
+                ", categoryIds=" + categoryIds +
+                ", groupId=" + groupId +
+                '}';
     }
 }

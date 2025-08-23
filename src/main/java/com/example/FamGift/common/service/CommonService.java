@@ -11,9 +11,13 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -48,5 +52,25 @@ public class CommonService {
     public User findUserByJwtToken() {
         String jwt = getCookieValueFromRequest("jwt");
         return findUserByJwtToken(jwt);
+    }
+
+    public String makeShortUuid() {
+        String uuidString = UUID.randomUUID().toString();
+        System.out.print(uuidString + " -> ");
+        byte[] uuidStringBytes = uuidString.getBytes(StandardCharsets.UTF_8);
+        byte[] hashBytes;
+
+        try {
+            MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+            hashBytes = messageDigest.digest(uuidStringBytes);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (int j = 0; j < 4; j++) {
+            sb.append(String.format("%02x", hashBytes[j]));
+        }
+        return sb.toString();
     }
 }

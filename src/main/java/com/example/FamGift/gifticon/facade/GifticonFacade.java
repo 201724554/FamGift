@@ -5,11 +5,15 @@ import com.example.FamGift.common.model.CommonYn;
 import com.example.FamGift.common.service.CommonService;
 import com.example.FamGift.common.service.FileService;
 import com.example.FamGift.gifticon.dto.GifticonAddDto;
+import com.example.FamGift.gifticon.dto.GifticonGroupDto;
 import com.example.FamGift.gifticon.model.Gifticon;
 import com.example.FamGift.gifticon.dto.GifticonDto;
 import com.example.FamGift.gifticon.service.GifticonService;
 import com.example.FamGift.gifticon_category.model.GifticonCategory;
 import com.example.FamGift.gifticon_category.service.GifticonCategoryService;
+import com.example.FamGift.group.dto.GroupDto;
+import com.example.FamGift.group.model.Group;
+import com.example.FamGift.group.service.GroupService;
 import com.example.FamGift.user.model.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +33,7 @@ import java.util.stream.Collectors;
 public class GifticonFacade {
     private final CommonService commonService;
     private final GifticonService gifticonService;
+    private final GroupService groupService;
     private final GifticonCategoryService gifticonCategoryService;
     private final FileService fileService;
     private final EntityManager entityManager;
@@ -50,6 +55,14 @@ public class GifticonFacade {
         GifticonDto gifticonDto = new GifticonDto(gifticon);
         gifticonDto.addCategories(gifticon);
         return gifticonDto;
+    }
+
+    public List<GifticonGroupDto> getGifticonByGroupRelatedToUser(Long groupId) {
+        User user = commonService.findUserByJwtToken();
+        if(groupId == null) {
+            return gifticonService.getGifticonByGroupRelatedToUser(user);
+        }
+        return gifticonService.getGifticonByGroupAndGroupRelatedToUser(user, groupId);
     }
 
     @Transactional
@@ -115,5 +128,16 @@ public class GifticonFacade {
 
         gifticon.reuse();
         gifticonService.saveGifticon(gifticon);
+    }
+
+    @Transactional
+    public void shareGifticon(GifticonDto dto) {
+        Gifticon gifticon = gifticonService.getGifticon(dto.getId()).orElseThrow(NoSuchElementException::new);
+        if(dto.getGroupId() == null) {
+            gifticon.stopSharing();
+        } else {
+            Group group = groupService.findGroupById(dto.getGroupId()).orElseThrow(NoSuchElementException::new);
+            gifticon.share(group);
+        }
     }
 }
