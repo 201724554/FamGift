@@ -5,6 +5,7 @@ import lombok.Getter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Entity
 @Table(name = "TB_USER", uniqueConstraints = {
@@ -49,5 +50,9 @@ public class User extends CommonEntity {
         this.name = name;
         this.password = password;
         this.authority = Auth.valueOf(authority);
+    }
+
+    public boolean isEqualTo(User user) {
+        return Objects.equals(this.id, user.getId());
     }
 }

@@ -25,7 +25,9 @@ public class LoginControllerImpl implements LoginController {
         return ResponseEntity
                 .ok()
                 .header(HttpHeaders.SET_COOKIE, cookies.get("jwt").toString())
-                .header(HttpHeaders.SET_COOKIE, cookies.get("login").toString()) //이 부분 userId에서 그냥 의미없는 값(login 여부)으로 변경
+                .header(HttpHeaders.SET_COOKIE, cookies.get("refresh").toString())
+                .header(HttpHeaders.SET_COOKIE, cookies.get("login").toString())
+                .header(HttpHeaders.SET_COOKIE, cookies.get("userId").toString())
                 .build();
     }
     @GetMapping("/test")

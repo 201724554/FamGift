@@ -1,6 +1,8 @@
 package com.example.FamGift.common.service;
 
 import com.auth0.jwt.interfaces.Claim;
+import com.example.FamGift.common.exception.CustomException;
+import com.example.FamGift.common.exception.ErrorMessage;
 import com.example.FamGift.user.model.User;
 import com.example.FamGift.user.repo.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -46,7 +48,7 @@ public class CommonService {
         Map<String, Claim> claims = tokenService.getClaims(token);
         Long userId = Long.valueOf(claims.get("id").asString());
         Optional<User> optionalUser = userRepository.findUserById(userId);
-        return optionalUser.orElseThrow(() -> new RuntimeException("사용자가 존재하지 않습니다"));
+        return optionalUser.orElseThrow(() -> new CustomException(ErrorMessage.USER_NOT_FOUND));
     }
 
     public User findUserByJwtToken() {

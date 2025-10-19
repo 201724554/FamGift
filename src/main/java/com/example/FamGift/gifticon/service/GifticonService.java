@@ -48,4 +48,7 @@ public class GifticonService {
         gifticonRepo.save(gifticon);
     }
 
+    public void updateGifticonGroupToNullByGroupId(Long groupId) {
+        gifticonRepo.updateGifticonGroupToNullByGroupId(groupId);
+    }
 }

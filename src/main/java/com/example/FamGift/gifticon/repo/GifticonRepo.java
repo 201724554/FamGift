@@ -6,6 +6,7 @@ import com.example.FamGift.gifticon.model.Gifticon;
 import com.example.FamGift.group.model.Group;
 import com.example.FamGift.user.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -70,4 +71,8 @@ public interface GifticonRepo extends JpaRepository<Gifticon, Long> {
             @Param("user") User user,
             @Param("groupId") Long groupId,
             @Param("gifticonUseYn") CommonYn gifticonUseYn);
+
+    @Modifying(flushAutomatically = true, clearAutomatically = true)
+    @Query("UPDATE Gifticon g set g.group = null WHERE g.group.id = :groupId")
+    void updateGifticonGroupToNullByGroupId(@Param("groupId") Long groupId);
 }

@@ -3,6 +3,8 @@ package com.example.FamGift.category.facade;
 import com.example.FamGift.category.dto.CategoryDto;
 import com.example.FamGift.category.model.Category;
 import com.example.FamGift.category.service.CategoryService;
+import com.example.FamGift.common.exception.CustomException;
+import com.example.FamGift.common.exception.ErrorMessage;
 import com.example.FamGift.common.service.CommonService;
 import com.example.FamGift.common.service.JwtTokenServiceImpl;
 import com.example.FamGift.user.model.User;
@@ -36,10 +38,19 @@ public class CategoryFacade {
 
     public void updateCategoryName(CategoryDto dto) {
         Category category = categoryService.getCategoriesByCategoryId(dto.getId()).orElseThrow(NoSuchElementException::new);
+        User user = commonService.findUserByJwtToken();
+        if(!user.isEqualTo(category.getCategoryOwner())) {
+            throw new CustomException(ErrorMessage.NOT_ALLOWED);
+        }
         categoryService.updateCategory(category, dto);
     }
 
     public void deleteCategory(CategoryDto dto) {
+        User user = commonService.findUserByJwtToken();
+        Category category = categoryService.getCategoriesByCategoryId(dto.getId()).orElseThrow(NoSuchElementException::new);
+        if(!user.isEqualTo(category.getCategoryOwner())) {
+            throw new CustomException(ErrorMessage.NOT_ALLOWED);
+        }
         categoryService.deleteCategory(dto);
     }
 }

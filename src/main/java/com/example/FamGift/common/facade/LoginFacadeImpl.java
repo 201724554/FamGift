@@ -102,8 +102,9 @@ public class LoginFacadeImpl implements LoginFacade {
 
         String accessToken = jwtTokenService.makeToken(newUser);
 
-        mp.put("jwt", cookieService.makeCookie("jwt", accessToken, new CookieOption("Strict", true, false, "/", Duration.ofHours(9999))));
-        //mp.put("userId", cookieService.makeCookie("userId", userId, new CookieOption("Strict", false, false, "/", Duration.ofHours(9999))));
+        mp.put("jwt", cookieService.makeCookie("jwt", accessToken, new CookieOption("Strict", true, false, "/", Duration.ofHours(1))));
+        mp.put("refresh", cookieService.makeCookie("refresh", accessToken, new CookieOption("Strict", true, false, "/", Duration.ofHours(3))));
+        mp.put("userId", cookieService.makeCookie("userId", userId, new CookieOption("Strict", false, false, "/", Duration.ofHours(9999))));
         mp.put("login", cookieService.makeCookie("login", "login", new CookieOption("Strict", false, false, "/", Duration.ofHours(9999))));
         return mp;
     }

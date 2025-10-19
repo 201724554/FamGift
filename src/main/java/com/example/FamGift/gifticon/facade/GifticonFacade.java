@@ -1,6 +1,8 @@
 package com.example.FamGift.gifticon.facade;
 
 import com.example.FamGift.category.model.Category;
+import com.example.FamGift.common.exception.CustomException;
+import com.example.FamGift.common.exception.ErrorMessage;
 import com.example.FamGift.common.model.CommonYn;
 import com.example.FamGift.common.service.CommonService;
 import com.example.FamGift.common.service.FileService;
@@ -87,7 +89,13 @@ public class GifticonFacade {
 
     @Transactional
     public void updateGifticon(GifticonAddDto dto) {
+        User user = commonService.findUserByJwtToken();
         Gifticon gifticon = gifticonService.getGifticon(dto.getId()).orElseThrow(NoSuchElementException::new);
+
+        if(!user.isEqualTo(gifticon.getGifticonOwner())) {
+            throw new CustomException(ErrorMessage.NOT_ALLOWED);
+        }
+
         List<GifticonCategory> gifticonCategories = dto.getCategories().stream()
                 .map((category) -> new GifticonCategory(gifticon, new Category(category)))
                 .collect(Collectors.toList());
@@ -98,7 +106,13 @@ public class GifticonFacade {
 
     @Transactional
     public void deleteGifticon(Long id) {
+        User user = commonService.findUserByJwtToken();
         Gifticon gifticon = gifticonService.getGifticon(id).orElseThrow(NoSuchElementException::new);
+
+        if(!user.isEqualTo(gifticon.getGifticonOwner())) {
+            throw new CustomException(ErrorMessage.NOT_ALLOWED);
+        }
+
         gifticon.delete();
     }
 
@@ -106,10 +120,10 @@ public class GifticonFacade {
         Gifticon gifticon = gifticonService.getGifticon(id).orElseThrow(NoSuchElementException::new);
 
         if(gifticon.getGifticonIsUsed().equals(CommonYn.Y)) {
-            throw new RuntimeException("사용처리된 쿠폰입니다.");
+            throw new CustomException(ErrorMessage.COUPON_ALREADY_USED);
         }
         if(gifticon.getGifticonUseYn().equals(CommonYn.N)) {
-            throw new RuntimeException("삭제 처리된 쿠폰입니다.");
+            throw new CustomException(ErrorMessage.COUPON_ALREADY_DELETED);
         }
 
         gifticon.use();
@@ -120,10 +134,10 @@ public class GifticonFacade {
         Gifticon gifticon = gifticonService.getGifticon(id).orElseThrow(NoSuchElementException::new);
 
         if(gifticon.getGifticonIsUsed().equals(CommonYn.N)) {
-            throw new RuntimeException("미사용처리된 쿠폰입니다.");
+            throw new CustomException(ErrorMessage.COUPON_ALREADY_DISABLED);
         }
         if(gifticon.getGifticonUseYn().equals(CommonYn.N)) {
-            throw new RuntimeException("삭제 처리된 쿠폰입니다.");
+            throw new CustomException(ErrorMessage.COUPON_ALREADY_DELETED);
         }
 
         gifticon.reuse();
@@ -132,7 +146,13 @@ public class GifticonFacade {
 
     @Transactional
     public void shareGifticon(GifticonDto dto) {
+        User user = commonService.findUserByJwtToken();
         Gifticon gifticon = gifticonService.getGifticon(dto.getId()).orElseThrow(NoSuchElementException::new);
+
+        if(!user.isEqualTo(gifticon.getGifticonOwner())) {
+            throw new CustomException(ErrorMessage.NOT_ALLOWED);
+        }
+
         if(dto.getGroupId() == null) {
             gifticon.stopSharing();
         } else {

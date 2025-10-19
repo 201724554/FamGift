@@ -14,6 +14,8 @@ public class GroupDto {
     private String groupPassword;
     private String isAdmin;
 
+    GroupDto() {}
+
     public GroupDto(Group group) {
         this.groupId = group.getId();
         this.groupName = group.getGroupName();
